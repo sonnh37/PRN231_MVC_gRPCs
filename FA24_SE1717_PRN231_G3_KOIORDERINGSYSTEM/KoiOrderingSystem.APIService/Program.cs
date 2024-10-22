@@ -16,19 +16,6 @@ builder.Services.AddGrpc();
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddControllers()
-    .AddOData(options =>
-    {
-        var odataBuilder = new ODataConventionModelBuilder();
-        odataBuilder.EntitySet<Travel>("Travels");
-
-        options.AddRouteComponents("odata", odataBuilder.GetEdmModel())
-               .Select() 
-               .Filter()  
-               .OrderBy() 
-               .Expand() 
-               .Count(); 
-    });
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -57,6 +44,10 @@ builder.Services.AddSwaggerGen(options =>
         });
 });
 
+builder.Services.AddGrpcClient<TravelGrpcService_.TravelGrpcService_Client>(options =>
+{
+    options.Address = new Uri("https://localhost:9876"); 
+});
 
 builder.Services.AddCors(options =>
 {

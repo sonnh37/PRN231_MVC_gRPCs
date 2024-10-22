@@ -1,7 +1,12 @@
 ﻿using Azure;
 using KoiOrderingSystem.APIService.Grpcs;
+using KoiOrderingSystem.Common;
+using KoiOrderingSystem.Data.Models;
+using KoiOrderingSystem.Service.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace KoiOrderingSystem.MVCWebApp.Controllers
 {
@@ -24,24 +29,53 @@ namespace KoiOrderingSystem.MVCWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(TravelRequest travelRequest)
         {
-            var response = await _travelServiceClient.CreateTravelAsync(travelRequest);
-            if (response.Message.Contains("successfully"))
+            if (ModelState.IsValid)
             {
-                // Nếu thành công, bạn có thể điều hướng đến một trang khác hoặc trả về một thông báo
-                return RedirectToAction("Index"); // Giả định bạn có action Index để xem danh sách chuyến đi
+                using (var httpClient = new HttpClient())
+                {
+                    using (var response = await httpClient.PostAsJsonAsync(Const.APIEndPoint + "travelsgrpc/", travelRequest))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<TravelReply>(content);
+                            if (result.Message.Contains("successfully"))
+                            {
+                                return RedirectToAction(nameof(Index));
+                            }
+                            else
+                            {
+                                return View(travelRequest);
+                            }
+                        }
+                    }
+                }
             }
-            ModelState.AddModelError("", "Failed to create travel");
-            return View(travelRequest);
+            return RedirectToAction(nameof(Index));
         }
 
         // Action để lấy chuyến đi theo ID
         [HttpGet]
         public async Task<IActionResult> Details(string? id)
         {
-            var response = await _travelServiceClient.GetTravelAsync(new TravelIdRequest { Id = id });
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "travelsgrpc/" + id))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<TravelReply>(content);
 
-            var travel = response.Travel;
-            return View(travel);
+                        if (result != null)
+                        {
+                            var data = result.Travel;
+                            return View(data);
+                        }
+                    }
+                }
+            }
+            return View();
 
         }
 
@@ -49,21 +83,45 @@ namespace KoiOrderingSystem.MVCWebApp.Controllers
         {
             if (id == null) return RedirectToAction(nameof(Index));
 
-            var data = await _travelServiceClient.GetTravelAsync(new TravelIdRequest { Id = id });
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "travelsgrpc/" + id))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<TravelReply>(content);
 
-            var travel = data.Travel;
-            return View(travel);
+                        if (result != null)
+                        {
+                            var data = result.Travel;
+                            return View(data);
+                        }
+                    }
+                }
+            }
+            return View();
         }
         // Action để cập nhật chuyến đi
         [HttpPost]
         public async Task<IActionResult> Edit(TravelRequest travelRequest)
         {
-            var response = await _travelServiceClient.UpdateTravelAsync(travelRequest);
-            if (response.Message.Contains("successfully"))
+
+            using (var httpClient = new HttpClient())
             {
-                return RedirectToAction("Index");
+                using (var response = await httpClient.PutAsJsonAsync(Const.APIEndPoint + "travelsgrpc/", travelRequest))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<TravelReply>(content);
+                        if (result.Message.Contains("successfully"))
+                        {
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                }
             }
-            ModelState.AddModelError("", "Failed to update travel");
             return View(travelRequest);
         }
 
@@ -71,21 +129,49 @@ namespace KoiOrderingSystem.MVCWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var response = await _travelServiceClient.DeleteTravelAsync(new TravelIdRequest { Id = id });
-            if (response.Message.Contains("successfully"))
+            using (var httpClient = new HttpClient())
             {
-                return RedirectToAction("Index");
+                using (var response = await httpClient.DeleteAsync(Const.APIEndPoint + "travelsgrpc/" + id))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<TravelReply>(content);
+
+                        if (result.Message.Contains("successfully"))
+                        {
+                            return RedirectToAction(nameof(Index));
+                        }
+                        else
+                        {
+                            return View(result);
+                        }
+                    }
+                }
             }
-            return NotFound();
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(string? id)
         {
-            if (id == null) return RedirectToAction(nameof(Index));
-            var data = await _travelServiceClient.GetTravelAsync(new TravelIdRequest { Id = id });
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "travelsgrpc/" + id))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<TravelReply>(content);
 
-            var travel = data.Travel;
-            return View(travel);
+                        if (result != null)
+                        {
+                            var data = result.Travel;
+                            return View(data);
+                        }
+                    }
+                }
+            }
+            return View();
         }
 
 
@@ -93,9 +179,23 @@ namespace KoiOrderingSystem.MVCWebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var response = await _travelServiceClient.ListTravelsAsync(new Empty());
-            var travels = response.Travels; // Lấy danh sách chuyến đi từ response
-            return View(travels);
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(Const.APIEndPoint + "travelsgrpc"))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<TravelListReply>(content);
+                        if (result != null)
+                        {
+                            var data = result.Travels.ToList();
+                            return View(data);
+                        }
+                    }
+                }
+            }
+            return View();
         }
     }
 
