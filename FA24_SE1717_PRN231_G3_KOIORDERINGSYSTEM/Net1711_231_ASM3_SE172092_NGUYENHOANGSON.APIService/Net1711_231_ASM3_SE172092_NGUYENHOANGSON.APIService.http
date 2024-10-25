@@ -1,0 +1,6 @@
+@Net1711_231_ASM3_SE172092_NGUYENHOANGSON.APIService_HostAddress = http://localhost:5191
+
+GET {{Net1711_231_ASM3_SE172092_NGUYENHOANGSON.APIService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

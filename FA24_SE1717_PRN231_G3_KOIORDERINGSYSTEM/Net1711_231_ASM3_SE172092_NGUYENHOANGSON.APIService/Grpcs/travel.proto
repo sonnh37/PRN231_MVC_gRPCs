@@ -1,0 +1,34 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Net1711_231_ASM3_SE172092_NGUYENHOANGSON.APIService.Grpcs";
+
+service TravelGrpcService_ {
+  rpc CreateTravel (TravelRequest) returns (TravelReply);
+  rpc GetTravel (TravelIdRequest) returns (TravelReply);
+  rpc UpdateTravel (TravelRequest) returns (TravelReply);
+  rpc DeleteTravel (TravelIdRequest) returns (TravelReply);
+  rpc ListTravels (Empty) returns (TravelListReply);
+}
+
+message TravelRequest {
+  string id = 1; 
+  string name = 2;
+  string location = 3;
+  double price = 4;
+  string note = 10;
+}
+
+message TravelReply {
+  string message = 1;
+  TravelRequest travel = 2; 
+}
+
+message TravelIdRequest {
+  string id = 1; 
+}
+
+message TravelListReply {
+  repeated TravelRequest travels = 1;
+}
+
+message Empty {}
