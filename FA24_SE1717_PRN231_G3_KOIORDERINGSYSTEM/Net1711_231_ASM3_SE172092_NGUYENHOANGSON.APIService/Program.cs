@@ -41,7 +41,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddGrpcClient<TravelGrpcService_.TravelGrpcService_Client>(options =>
+builder.Services.AddGrpcClient<BookingRequestGrpcService_.BookingRequestGrpcService_Client>(options =>
 {
     options.Address = new Uri("https://localhost:9876");
 });
@@ -90,7 +90,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<TravelService>();
+builder.Services.AddScoped<IBookingRequestService, BookingRequestService>();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -115,6 +115,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapGrpcService<TravelGrpcService>(); // Thêm dịch vụ gRPC ở đây
+app.MapGrpcService<BookingRequestGrpcService>(); // Thêm dịch vụ gRPC ở đây
 
 app.Run();

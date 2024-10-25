@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option csharp_namespace = "Net1711_231_ASM3_SE172092_NGUYENHOANGSON.APIService.Grpcs";
+
+service BookingRequestGrpcService_ {
+  rpc CreateBookingRequest (BookingRequestRequest) returns (BookingRequestReply);
+  rpc GetBookingRequest (BookingRequestIdRequest) returns (BookingRequestReply);
+  rpc UpdateBookingRequest (BookingRequestRequest) returns (BookingRequestReply);
+  rpc DeleteBookingRequest (BookingRequestIdRequest) returns (BookingRequestReply);
+  rpc ListBookingRequests (Empty) returns (BookingRequestListReply);
+}
+
+message BookingRequestRequest {
+  string id = 1;
+  string customerId = 2;
+  string travelId = 3;
+  int32 quantityService = 4;
+  int32 numberOfPerson = 5;
+  BookingRequestStatus status = 6;
+  string createdBy = 7;
+  string createdDate = 8;
+  string updatedBy = 9;
+  string updatedDate = 10;
+  bool isDeleted = 11;
+  string note = 12;
+}
+
+message BookingRequestReply {
+  string message = 1;
+  BookingRequestRequest bookingRequestRequest = 2;
+}
+
+message BookingRequestIdRequest {
+  string id = 1;
+}
+
+message Empty {}
+
+message BookingRequestListReply {
+  repeated BookingRequestRequest bookingRequestRequests = 1;
+}
+
+enum BookingRequestStatus {
+  Pending = 0;
+  Approved = 1;
+  Rejected = 2;
+}

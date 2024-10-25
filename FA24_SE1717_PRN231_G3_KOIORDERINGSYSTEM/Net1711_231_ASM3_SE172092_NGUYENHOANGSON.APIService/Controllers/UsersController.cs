@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Net1711_231_ASM3_SE172092_NGUYENHOANGSON.APIService.Request;
 using Net1711_231_ASM3_SE172092_NGUYENHOANGSON.Service;
+using Net1711_231_ASM3_SE172092_NGUYENHOANGSON.Service.Base;
 
 namespace Net1711_231_ASM3_SE172092_NGUYENHOANGSON.APIService.Controllers;
 
@@ -14,6 +15,12 @@ public class UsersController : ControllerBase
     public UsersController(IConfiguration conf)
     {
         _userService ??= new UserService(conf);
+    }
+
+    [HttpGet]
+    public async Task<IBusinessResult> GetUsers()
+    {
+        return await _userService.GetAll();
     }
 
     [AllowAnonymous]

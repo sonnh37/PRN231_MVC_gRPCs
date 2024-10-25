@@ -6,22 +6,28 @@ namespace Net1711_231_ASM3_SE172092_NGUYENHOANGSON.Data;
 public class UnitOfWork
 {
     private readonly FA24_SE1717_PRN231_G3_KOIORDERINGSYSTEMINJAPANContext context;
-    private TravelRepository travelRepository;
+    private BookingRequestRepository bookingRequestRepository;
     private UserRepository userRepository;
+    private TravelRepository travelRepository;
 
     public UnitOfWork()
     {
         context ??= new FA24_SE1717_PRN231_G3_KOIORDERINGSYSTEMINJAPANContext();
     }
 
-    public TravelRepository TravelRepository
+    public BookingRequestRepository BookingRequest
     {
-        get { return travelRepository ??= new TravelRepository(context); }
+        get { return bookingRequestRepository ??= new BookingRequestRepository(context); }
     }
 
     public UserRepository UserRepository
     {
         get { return userRepository ??= new UserRepository(context); }
+    }
+
+    public TravelRepository Travel
+    {
+        get { return travelRepository ??= new TravelRepository(context); }
     }
 
     ////TO-DO CODE HERE/////////////////

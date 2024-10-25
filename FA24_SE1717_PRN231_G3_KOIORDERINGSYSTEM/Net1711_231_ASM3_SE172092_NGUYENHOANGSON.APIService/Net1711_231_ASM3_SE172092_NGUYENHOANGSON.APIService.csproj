@@ -7,30 +7,34 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.28.2"/>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.66.0"/>
-        <PackageReference Include="Grpc.Net.Client" Version="2.66.0"/>
+        <PackageReference Include="Google.Protobuf" Version="3.28.2" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.66.0" />
+        <PackageReference Include="Grpc.Net.Client" Version="2.66.0" />
         <PackageReference Include="Grpc.Tools" Version="2.67.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10"/>
-        <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
+        <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0"/>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Net1711_231_ASM3_SE172092_NGUYENHOANGSON.Service\Net1711_231_ASM3_SE172092_NGUYENHOANGSON.Service.csproj"/>
+        <ProjectReference Include="..\Net1711_231_ASM3_SE172092_NGUYENHOANGSON.Service\Net1711_231_ASM3_SE172092_NGUYENHOANGSON.Service.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="Grpcs\*.proto" GrpcServices="Both"/>
+        <Protobuf Include="Grpcs\*.proto" GrpcServices="Both" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Grpcs\BookingRequest.proto" />
     </ItemGroup>
 
 </Project>

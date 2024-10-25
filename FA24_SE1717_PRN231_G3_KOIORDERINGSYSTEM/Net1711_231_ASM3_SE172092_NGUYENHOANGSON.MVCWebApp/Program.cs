@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(services =>
 {
     var channel = GrpcChannel.ForAddress("https://localhost:9876"); // Địa chỉ của gRPC server
-    return new TravelGrpcService_.TravelGrpcService_Client(channel);
+    return new BookingRequestGrpcService_.BookingRequestGrpcService_Client(channel);
 });
 
 // Add services to the container.

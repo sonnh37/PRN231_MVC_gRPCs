@@ -12,6 +12,8 @@ namespace Net1711_231_ASM3_SE172092_NGUYENHOANGSON.Service;
 
 public interface IUserService
 {
+    Task<IBusinessResult> GetAll();
+
     Task<IBusinessResult> Login(string usernameOrEmail, string password);
 }
 
@@ -69,5 +71,18 @@ public class UserService : IUserService
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
         return (jwt, _expirationTime.ToString("o")); // Trả về token và thời gian hết hạn
+    }
+
+    public async Task<IBusinessResult> GetAll()
+    {
+        var result = await _unitOfWork.UserRepository.GetAllAsync();
+        if (result == null || !result.Any())
+        {
+            return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG, result);
+        }
+        else
+        {
+            return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+        }
     }
 }
